@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from .models import Departments
 from .models import Doctors
 from .models import Booking
+from .forms import BookingForm
 
 # Create your views here.
 def index(request):
@@ -18,10 +19,18 @@ def about(request):
     return render(request, 'about.html')
 
 def booking(request):
-    dict_booking = {
-        'booking': Booking.object.all()
+    if request.method == "POST":
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+    form = BookingForm()
+    dict_form = {
+        'form': form
     }
-    return render(request, 'booking.html')
+    # dict_booking = {
+    #     'booking': Booking.object.all()
+    # }
+    return render(request, 'booking.html', dict_form)
 
 def doctors(request):
     dict_doct = {
